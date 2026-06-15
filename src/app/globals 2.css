@@ -1,0 +1,792 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   MatrixLab Intelligence — Design System
+   ============================================================
+   Brand: Purple / Aqua / Coral / Dark Graphite
+   Style: Glassmorphism + Bento Grid + Creative Lab
+   Fonts: Syne (headings) + Manrope (body)
+   ============================================================ */
+
+@theme inline {
+  /* ── Core semantic tokens ─────────────────────── */
+  --color-background:        var(--bg-base);
+  --color-foreground:        var(--text-primary);
+  --color-card:              var(--surface);
+  --color-card-foreground:   var(--text-primary);
+  --color-popover:           var(--surface-raised);
+  --color-popover-foreground: var(--text-primary);
+  --color-primary:           var(--brand-purple);
+  --color-primary-foreground: var(--text-primary);
+  --color-secondary:         var(--surface-raised);
+  --color-secondary-foreground: var(--text-muted);
+  --color-muted:             var(--surface);
+  --color-muted-foreground:  var(--text-muted);
+  --color-accent:            var(--surface-raised);
+  --color-accent-foreground: var(--text-primary);
+  --color-destructive:       oklch(0.704 0.191 22.216);
+  --color-border:            var(--border-subtle);
+  --color-input:             var(--border-subtle);
+  --color-ring:              var(--brand-purple);
+
+  /* ── Brand accent colors (Tailwind utilities) ─── */
+  --color-brand-purple:      var(--brand-purple);
+  --color-brand-aqua:        var(--brand-aqua);
+  --color-brand-coral:       var(--brand-coral);
+  --color-brand-gold:        var(--brand-gold);
+
+  /* ── Typography ──────────────────────────────── */
+  --font-sans:    var(--font-manrope);
+  --font-heading: var(--font-syne);
+  --font-mono:    ui-monospace, monospace;
+
+  /* ── Radius ──────────────────────────────────── */
+  --radius-sm:   0.5rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1rem;
+  --radius-xl:   1.25rem;
+  --radius-2xl:  1.5rem;
+  --radius-3xl:  2rem;
+
+  /* ── Sidebar (shadcn) ─────────────────────────── */
+  --color-sidebar:                    var(--surface);
+  --color-sidebar-foreground:         var(--text-primary);
+  --color-sidebar-primary:            var(--brand-purple);
+  --color-sidebar-primary-foreground: var(--text-primary);
+  --color-sidebar-accent:             var(--surface-raised);
+  --color-sidebar-accent-foreground:  var(--text-primary);
+  --color-sidebar-border:             var(--border-subtle);
+  --color-sidebar-ring:               var(--brand-purple);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOTION DESIGN TOKENS  (Emil Kowalski philosophy)
+   ══════════════════════════════════════════════════════════════
+
+   Easing:
+   --ease-out     Strong ease-out — snappy entrance, responsive
+   --ease-inout   Strong ease-in-out — on-screen movement
+   --ease-spring  Subtle spring overshoot — playful, alive
+   --ease-linear  Constant speed — progress bars, marquees
+
+   Durations:
+   --dur-press    Button/press feedback — must feel instant
+   --dur-micro    Tooltips, badges — fast hover states
+   --dur-base     Dropdowns, small UI — standard interaction
+   --dur-med      Modals, drawers — deliberate transitions
+   --dur-reveal   Scroll reveals — generous entrance
+
+   Stagger:
+   --stagger-step  Per-item delay multiplier (use with --child-index)
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties ──────────────────────────────────── */
+:root {
+  /* Motion tokens */
+  --ease-out:    cubic-bezier(0.23, 1,    0.32, 1);
+  --ease-inout:  cubic-bezier(0.77, 0,    0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-linear: linear;
+
+  --dur-press:  80ms;
+  --dur-micro:  150ms;
+  --dur-base:   220ms;
+  --dur-med:    350ms;
+  --dur-reveal: 600ms;
+
+  --stagger-step: 65ms;   /* per-child delay in staggered groups */
+
+  /* Dark base — deep purple-graphite */
+  --bg-base:       #09080F;
+  --surface:       #100F1A;
+  --surface-raised: #17152A;
+  --surface-high:  #1F1C35;
+
+  /* Brand palette */
+  --brand-purple:  #A78BFA;   /* violet-400  */
+  --brand-aqua:    #22D3EE;   /* cyan-400    */
+  --brand-coral:   #FB7185;   /* rose-400    */
+  --brand-gold:    #FCD34D;   /* amber-300   */
+  --brand-wa:      #25D366;   /* WhatsApp    */
+
+  /* Text */
+  --text-primary:  #F5F3FF;
+  --text-muted:    #8B879E;
+  --text-subtle:   #5C5870;
+
+  /* Borders */
+  --border-subtle: rgba(167, 139, 250, 0.12);
+  --border-glass:  rgba(255, 255, 255, 0.07);
+
+  /* Radius (shadcn compat) */
+  --radius: 0.75rem;
+}
+
+/* ── Glass utility classes ───────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-raised {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+}
+
+/* ── Circuit board texture overlay ──────────────────────────── */
+.circuit-texture {
+  position: relative;
+}
+.circuit-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 30h10M50 30h10M30 0v10M30 50v10M10 30h5M45 30h5' stroke='%23A78BFA' stroke-width='0.4' opacity='0.15' fill='none'/%3E%3Ccircle cx='30' cy='30' r='2' fill='%23A78BFA' opacity='0.1'/%3E%3Ccircle cx='10' cy='30' r='1.5' fill='%2322D3EE' opacity='0.1'/%3E%3Ccircle cx='50' cy='30' r='1.5' fill='%2322D3EE' opacity='0.1'/%3E%3Ccircle cx='30' cy='10' r='1.5' fill='%23FB7185' opacity='0.1'/%3E%3Ccircle cx='30' cy='50' r='1.5' fill='%23FB7185' opacity='0.1'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+/* ── Gradient text helper ────────────────────────────────────── */
+.gradient-text-purple-aqua {
+  background: linear-gradient(135deg, #A78BFA 0%, #22D3EE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-coral-gold {
+  background: linear-gradient(135deg, #FB7185 0%, #FCD34D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow accents ────────────────────────────────────────────── */
+.glow-purple { box-shadow: 0 0 24px rgba(167, 139, 250, 0.25); }
+.glow-aqua   { box-shadow: 0 0 24px rgba(34, 211, 238, 0.25);  }
+.glow-coral  { box-shadow: 0 0 24px rgba(251, 113, 133, 0.25); }
+
+/* ── Sticker paper effect ────────────────────────────────────── */
+.sticker-effect {
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.4),
+    2px 2px 0 rgba(167,139,250,0.08),
+    4px 4px 0 rgba(167,139,250,0.04);
+}
+
+/* ── Accent line top ─────────────────────────────────────────── */
+.accent-line-purple { border-top: 2px solid #A78BFA; }
+.accent-line-aqua   { border-top: 2px solid #22D3EE; }
+.accent-line-coral  { border-top: 2px solid #FB7185; }
+.accent-line-gold   { border-top: 2px solid #FCD34D; }
+
+/* ── WhatsApp button (base colors — transitions defined in motion system) ── */
+.btn-whatsapp {
+  background-color: #25D366;
+  color: #fff;
+}
+.btn-whatsapp:hover {
+  background-color: #1fad52;
+  box-shadow: 0 0 24px rgba(37, 211, 102, 0.4);
+}
+
+/* ── Base layer ──────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    /* Offset anchor scroll below floating navbar: h-14 (56px) + top-4 (16px) + buffer (8px) */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-manrope), system-ui, sans-serif;
+    line-height: 1.6;
+    background-image:
+      radial-gradient(ellipse 80% 45% at 50% -5%,  rgba(167,139,250,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 35% at 90%  90%, rgba(34,211,238,0.05)  0%, transparent 50%),
+      radial-gradient(ellipse 40% 30% at 10%  70%, rgba(251,113,133,0.04) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-syne), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  a, button, [role="button"] {
+    cursor: pointer;
+  }
+
+  /* Ensure all interactive elements have focus rings */
+  :focus-visible {
+    outline: 2px solid var(--brand-purple);
+    outline-offset: 3px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ANIMATION KEYFRAMES
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+@keyframes aurora-shift {
+  0%   { background-position: 0%   60%; }
+  50%  { background-position: 100% 40%; }
+  100% { background-position: 0%   60%; }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.75; }
+}
+@keyframes trace-in {
+  from { stroke-dashoffset: 600; opacity: 0; }
+  20%  { opacity: 1; }
+  to   { stroke-dashoffset: 0;   opacity: 0.4; }
+}
+
+/* ── Animation utilities ─────────────────────────────────────── */
+.animate-float          { animation: float         7s ease-in-out infinite; }
+.animate-float-slow     { animation: float         11s ease-in-out infinite; }
+.animate-float-delayed  { animation: float         7s ease-in-out 3.5s infinite; }
+.animate-float-gentle   { animation: float-gentle  9s ease-in-out infinite; }
+.animate-glow-breathe   { animation: glow-breathe  4s ease-in-out infinite; }
+
+/* ── Aurora hero background ──────────────────────────────────── */
+.aurora-bg {
+  background: linear-gradient(-50deg,
+    #07060D 0%,
+    #130A28 25%,
+    #071422 50%,
+    #1A0820 75%,
+    #07060D 100%);
+  background-size: 400% 400%;
+  animation: aurora-shift 20s ease infinite;
+}
+
+/* ── Product card hover (GPU only, pointer-device gated) ───────── */
+.product-card {
+  transition:
+    transform  var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+  will-change: transform;
+}
+/* Active state — instant press feedback */
+.product-card:active { transform: scale(0.98); }
+
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+}
+
+/* ── Neon text ───────────────────────────────────────────────── */
+.neon-text-purple { text-shadow: 0 0 18px rgba(167,139,250,0.55), 0 0 35px rgba(167,139,250,0.25); }
+.neon-text-aqua   { text-shadow: 0 0 18px rgba(34,211,238,0.55),  0 0 35px rgba(34,211,238,0.25);  }
+.neon-text-coral  { text-shadow: 0 0 18px rgba(251,113,133,0.55), 0 0 35px rgba(251,113,133,0.25); }
+
+/* ── Section gradient divider ────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(167,139,250,0.35) 25%,
+    rgba(34,211,238,0.35)  50%,
+    rgba(251,113,133,0.35) 75%,
+    transparent 100%);
+}
+
+/* ── Sticker peel corner effect ──────────────────────────────── */
+.sticker-peel {
+  position: relative;
+  overflow: visible;
+}
+.sticker-peel::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    315deg,
+    var(--bg-base) 48%,
+    rgba(167,139,250,0.25) 52%,
+    rgba(255,255,255,0.06) 58%
+  );
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  border-radius: 0 0 4px 0;
+}
+
+/* ── Ticket / perforated edge ────────────────────────────────── */
+.ticket-divider {
+  border: none;
+  height: 0;
+  border-top: 2px dashed rgba(34,211,238,0.25);
+  position: relative;
+}
+.ticket-divider::before,
+.ticket-divider::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-base);
+}
+.ticket-divider::before { left: -12px; }
+.ticket-divider::after  { right: -12px; }
+
+/* ── Production scale bar ────────────────────────────────────── */
+.scale-bar {
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #FB7185 0%, #FCD34D 100%);
+}
+
+/* ── Tech monospace tag ──────────────────────────────────────── */
+.tech-tag {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO ENTRANCE  — CSS-only, runs off main thread, no hydration flash
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes heroFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* animation-fill-mode: both = backwards (hidden during delay) + forwards (stays visible) */
+.hero-in-1 { opacity:0; animation: heroIn 700ms var(--ease-out)  0ms   both; }
+.hero-in-2 { opacity:0; animation: heroIn 700ms var(--ease-out)  90ms  both; }
+.hero-in-3 { opacity:0; animation: heroIn 700ms var(--ease-out)  180ms both; }
+.hero-in-4 { opacity:0; animation: heroIn 600ms var(--ease-out)  280ms both; }
+.hero-in-5 { opacity:0; animation: heroIn 550ms var(--ease-out)  360ms both; }
+.hero-in-6 { opacity:0; animation: heroIn 500ms var(--ease-out)  430ms both; }
+.hero-in-7 { opacity:0; animation: heroIn 450ms var(--ease-out)  500ms both; }
+.hero-in-fade { opacity:0; animation: heroFade 800ms var(--ease-out) 150ms both; }
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL REVEAL  — data-attribute driven, one IntersectionObserver per section
+   ══════════════════════════════════════════════════════════════
+
+   Usage:
+     <Reveal animation="up">   → [data-reveal="up"]
+     <Reveal animation="scale"> → [data-reveal="scale"]
+     Children with .reveal-child + style={{"--child-index":n}} get stagger
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Initial hidden states ─── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity  var(--dur-reveal) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal="scale"] {
+  transform: scale(0.95) translateY(10px);
+}
+[data-reveal="fade"] {
+  transform: none;
+}
+[data-reveal="left"] {
+  transform: translateX(-18px);
+  opacity: 0;
+}
+[data-reveal="right"] {
+  transform: translateX(18px);
+  opacity: 0;
+}
+
+/* ── Revealed states ─── */
+[data-reveal][data-in-view="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-reveal="scale"][data-in-view="true"] {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+[data-reveal="left"][data-in-view="true"],
+[data-reveal="right"][data-in-view="true"] {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Stagger children ─── */
+/* Parent: [data-in-view="true"]  →  children with .reveal-child animate in order */
+.reveal-child {
+  opacity: 0;
+  transform: translateY(14px) scale(0.97);
+  transition:
+    opacity   var(--dur-reveal) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-out);
+  transition-delay: calc(var(--child-index, 0) * var(--stagger-step, 65ms));
+}
+[data-in-view="true"] .reveal-child {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INTERACTIVE ELEMENTS  — Emil: button press = scale(0.97) in 80ms
+   ══════════════════════════════════════════════════════════════ */
+
+/* WhatsApp button — press feedback + hover glow */
+.btn-whatsapp {
+  transition:
+    background-color var(--dur-micro) ease,
+    box-shadow       var(--dur-micro) ease,
+    transform        var(--dur-press) var(--ease-out);
+}
+.btn-whatsapp:active {
+  transform: scale(0.97);
+  transition-duration: var(--dur-press);
+}
+
+/* Generic press feedback for all clickable cards */
+.pressable {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.pressable:active {
+  transform: scale(0.98);
+}
+
+/* ── Hover: only on pointer devices (Emil: gate with hover media query) ─── */
+@media (hover: hover) and (pointer: fine) {
+  .card-hover {
+    transition:
+      transform    var(--dur-base) var(--ease-out),
+      box-shadow   var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  .card-hover:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Hover overlay brightening — works on any card */
+  .hover-brighten::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    border-radius: inherit;
+    pointer-events: none;
+    transition: background var(--dur-base) var(--ease-out);
+  }
+  .hover-brighten:hover::after {
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* CTA arrow slides on hover */
+  .hover-arrow-right {
+    transition: transform var(--dur-micro) var(--ease-out);
+  }
+  .group:hover .hover-arrow-right,
+  .card-hover:hover .hover-arrow-right {
+    transform: translateX(4px);
+  }
+
+  /* NavLink active underline — clip-path reveal (Emil's clip-path technique) */
+  .nav-underline {
+    position: relative;
+  }
+  .nav-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 12px;
+    right: 12px;
+    height: 1.5px;
+    border-radius: 9999px;
+    background: var(--brand-purple);
+    transform-origin: left;
+    transform: scaleX(0);
+    opacity: 0;
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      opacity   var(--dur-base) var(--ease-out);
+  }
+  .nav-underline[data-active="true"]::after {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Scale bar — animate from 0 width using scaleX (GPU, no layout reflow) */
+.scale-bar-animated {
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 750ms var(--ease-out);
+  transition-delay: calc(var(--child-index, 0) * 120ms + 200ms);
+}
+[data-in-view="true"] .scale-bar-animated {
+  transform: scaleX(1);
+}
+
+/* ── Subtle floating glow accent on product visuals ─── */
+.visual-glow-accent {
+  animation: glow-breathe 4s ease-in-out infinite;
+}
+
+/* ── CTA WhatsApp ring pulse — subtle, non-distracting ─── */
+@keyframes wa-ring {
+  0%   { box-shadow: 0 0 0 0   rgba(37,211,102,0.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(37,211,102,0);   }
+  100% { box-shadow: 0 0 0 0   rgba(37,211,102,0);   }
+}
+.btn-whatsapp-pulse {
+  animation: wa-ring 3s ease-out 2s infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION ENTRANCE ACCENT LINE  — draws in from left on reveal
+   ══════════════════════════════════════════════════════════════ */
+.section-label-reveal {
+  overflow: hidden;
+}
+.section-label-reveal span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    opacity   var(--dur-med) var(--ease-out);
+}
+[data-in-view="true"] .section-label-reveal span {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARD SHIMMER  — premium shine sweep on hover
+   ══════════════════════════════════════════════════════════════ */
+@keyframes shimmer-sweep {
+  from { transform: translateX(-160%) skewX(-12deg); }
+  to   { transform: translateX(260%)  skewX(-12deg); }
+}
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.card-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 70%
+  );
+  transform: translateX(-160%) skewX(-12deg);
+  pointer-events: none;
+  z-index: 2;
+  transition: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .card-shimmer:hover::after {
+    animation: shimmer-sweep 560ms var(--ease-out) forwards;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO SCAN LINE  — one-time power-up sweep on page load
+   ══════════════════════════════════════════════════════════════ */
+@keyframes scan-once {
+  0%   { top: -2px; opacity: 0;   }
+  6%   { opacity: 0.85; }
+  93%  { opacity: 0.55; }
+  100% { top: 100%;  opacity: 0;  }
+}
+.hero-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(167,139,250,0.7) 20%,
+    rgba(34,211,238,1.0)  50%,
+    rgba(167,139,250,0.7) 80%,
+    transparent 100%);
+  animation: scan-once 2.2s var(--ease-inout) 0.5s forwards;
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MARQUEE  — horizontal infinite scroll for product tags
+   ══════════════════════════════════════════════════════════════ */
+@keyframes marquee {
+  from { transform: translateX(0%);   }
+  to   { transform: translateX(-50%); }
+}
+.marquee-wrapper {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+.marquee-track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GLOW BORDER HOVER  — per-accent color variants
+   ══════════════════════════════════════════════════════════════ */
+@media (hover: hover) and (pointer: fine) {
+  .glow-hover-purple {
+    transition: box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+  }
+  .glow-hover-purple:hover {
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.45), 0 8px 40px rgba(167,139,250,0.18), 0 24px 64px rgba(0,0,0,0.55);
+    border-color: rgba(167,139,250,0.5) !important;
+  }
+  .glow-hover-aqua {
+    transition: box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+  }
+  .glow-hover-aqua:hover {
+    box-shadow: 0 0 0 1px rgba(34,211,238,0.45), 0 8px 40px rgba(34,211,238,0.18), 0 24px 64px rgba(0,0,0,0.55);
+    border-color: rgba(34,211,238,0.5) !important;
+  }
+  .glow-hover-coral {
+    transition: box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+  }
+  .glow-hover-coral:hover {
+    box-shadow: 0 0 0 1px rgba(251,113,133,0.45), 0 8px 40px rgba(251,113,133,0.18), 0 24px 64px rgba(0,0,0,0.55);
+    border-color: rgba(251,113,133,0.5) !important;
+  }
+  .glow-hover-gold {
+    transition: box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+  }
+  .glow-hover-gold:hover {
+    box-shadow: 0 0 0 1px rgba(252,211,77,0.45), 0 8px 40px rgba(252,211,77,0.18), 0 24px 64px rgba(0,0,0,0.55);
+    border-color: rgba(252,211,77,0.5) !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TICKET HOLOGRAPHIC SHEEN
+   ══════════════════════════════════════════════════════════════ */
+.ticket-holo {
+  position: relative;
+}
+.ticket-holo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    transparent       25%,
+    rgba(167,139,250, 0.05) 38%,
+    rgba(34,211,238,  0.07) 50%,
+    rgba(251,113,133, 0.05) 62%,
+    transparent       75%
+  );
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PORTAL CARD  — large editorial "choose path" cards
+   ══════════════════════════════════════════════════════════════ */
+.portal-card {
+  transition:
+    transform    var(--dur-med) var(--ease-out),
+    box-shadow   var(--dur-med) var(--ease-out),
+    border-color var(--dur-med) var(--ease-out);
+}
+.portal-card:active { transform: scale(0.99); }
+@media (hover: hover) and (pointer: fine) {
+  .portal-card:hover { transform: translateY(-10px) scale(1.01); }
+}
+
+/* ── Respect reduced motion ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* Kill all animations and transitions with movement */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .aurora-bg { animation: none; }
+  html { scroll-behavior: auto; }
+
+  /* Reveal: show immediately, only fade (no movement) */
+  [data-reveal],
+  [data-reveal="scale"],
+  [data-reveal="left"],
+  [data-reveal="right"] {
+    transform: none !important;
+    transition-property: opacity !important;
+    transition-duration: 200ms !important;
+  }
+  .reveal-child {
+    transform: none !important;
+    transition-property: opacity !important;
+  }
+  .hero-in-1, .hero-in-2, .hero-in-3, .hero-in-4,
+  .hero-in-5, .hero-in-6, .hero-in-7, .hero-in-fade {
+    animation-name: heroFade !important;
+    transform: none !important;
+  }
+  .scale-bar-animated {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
+  /* Hover: no movement in reduced motion */
+  .card-hover:hover   { transform: none !important; }
+  .portal-card:hover  { transform: none !important; }
+  .product-card:hover { transform: none !important; box-shadow: none !important; }
+  /* Disable scan line and marquee */
+  .hero-scan-line  { animation: none !important; opacity: 0 !important; }
+  .marquee-track   { animation: none !important; }
+  /* Disable shimmer */
+  .card-shimmer::after { animation: none !important; }
+}
