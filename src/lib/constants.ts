@@ -12,7 +12,8 @@ export function whatsappLink(message?: string): string {
   const text = encodeURIComponent(
     message ?? "Hola, me interesa cotizar algo con MatrixLab Intelligence."
   )
-  return `https://wa.me/${WA_NUMBER}?text=${text}`
+  // wa.me exige el número sin "+", espacios ni guiones
+  return `https://wa.me/${WA_NUMBER.replace(/\D/g, "")}?text=${text}`
 }
 
 // ── Social Links ─────────────────────────────────────────────
